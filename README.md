@@ -26,7 +26,7 @@ The goal isn't to build the strongest possible Gomoku agent — it's to deeply u
 ## The arc
 
 | Part | Chapters | Board | Methods |
-|------|----------|-------|---------|--------|
+|------|----------|-------|---------|
 | I — Tabular | 2–8 | 6×6 | Bandits, DP, MC, TD, n-step, Dyna-Q, MCTS | 
 | II — Approximate | 9–13 | 9×9 | Linear FA, semi-gradient TD, TD(λ), REINFORCE, A2C |
 | III — Deep | 13+ / Ch. 16 | 15×15 | DQN, PPO, AlphaZero-style |
