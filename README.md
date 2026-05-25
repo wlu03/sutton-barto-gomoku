@@ -1,6 +1,6 @@
 # sutton-barto-gomoku
 
-> Implementing every major algorithm from Sutton & Barto's *Reinforcement Learning: An Introduction* (2nd ed.), with Gomoku as the through-line — from ε-greedy bandits to an AlphaZero-style self-play agent.
+> Implementing every major algorithm from Sutton & Barto's *[Reinforcement Learning: An Introduction](https://web.stanford.edu/class/psych209/Readings/SuttonBartoIPRLBook2ndEd.pdf)* (2nd ed.), with Gomoku as the through-line — from ε-greedy bandits to an AlphaZero-style self-play agent.
 
 <p align="center">
   <img src="https://images.unsplash.com/photo-1633974026122-2861ae7b6087?w=1200&h=400&fit=crop" alt="Gomoku board" width="720"/>
@@ -8,10 +8,9 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/python-3.11+-blue.svg" alt="Python 3.11+"/>
-  <img src="https://img.shields.io/badge/pytorch-2.x-ee4c2c.svg" alt="PyTorch 2.x"/>
-  <img src="https://img.shields.io/github/license/YOUR_USERNAME/sutton-barto-gomoku" alt="License"/>
-  <img src="https://img.shields.io/github/actions/workflow/status/YOUR_USERNAME/sutton-barto-gomoku/ci.yml?branch=main" alt="CI"/>
-  <img src="https://img.shields.io/github/last-commit/YOUR_USERNAME/sutton-barto-gomoku" alt="Last commit"/>
+  <img src="https://img.shields.io/github/license/wlu03/sutton-barto-gomoku" alt="License"/>
+  <img src="https://img.shields.io/github/actions/workflow/status/wlu03/sutton-barto-gomoku/ci.yml?branch=main" alt="CI"/>
+  <img src="https://img.shields.io/github/last-commit/wlu03/sutton-barto-gomoku" alt="Last commit"/>
   <img src="https://img.shields.io/badge/book-Sutton%20%26%20Barto-success" alt="Sutton & Barto"/>
 </p>
 
@@ -51,6 +50,23 @@ python -m gomoku.train qlearning --size 6 --episodes 100000
 # Watch two trained agents play
 python -m gomoku.play --black checkpoints/qlearn.pt --white checkpoints/sarsa.pt
 ```
+
+### Web UI
+
+A small browser interface for playing against agents, watching agent-vs-agent matches, and replaying saved games.
+
+```bash
+uv sync --extra web
+uv run python -m gomoku.web        # serves http://127.0.0.1:8000
+```
+
+Three modes:
+
+- **Human vs Agent** — click intersections to play; the agent responds.
+- **Agent vs Agent** — pick both sides, then autoplay with a speed slider or step manually.
+- **Replay** — load a `{size, moves: [...]}` JSON file and scrub through the game.
+
+Agent dropdowns are populated from anything registered with `@register_agent` (see [`gomoku/web/registry.py`](gomoku/web/registry.py)). They'll be empty until you ship your first `Agent` subclass.
 
 ## Repo layout
 
