@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gomoku · sutton & barto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="masthead">
+  <div class="wordmark">
+    <span class="brand">Gomoku</span>
+    <span class="rule"></span>
+    <span class="tagline">a study in reinforcement<span class="sep">·</span>after sutton &amp; barto</span>
+  </div>
+  <div class="meta">
+    <span id="status-dot" class="dot live"></span>
+    <span id="status-label">idle</span>
+  </div>
+</header>
+
+<main class="layout">
+
+  <!-- LEFT: controls -->
+  <aside class="panel controls">
+    <section class="ctl-block">
+      <h2 class="label">Mode</h2>
+      <div class="mode-tabs" role="tablist">
+        <button class="tab" data-mode="hva" aria-selected="true">Human <em>vs</em> Agent</button>
+        <button class="tab" data-mode="ava" aria-selected="false">Agent <em>vs</em> Agent</button>
+        <button class="tab" data-mode="rep" aria-selected="false">Replay</button>
+      </div>
+    </section>
+
+    <section class="ctl-block" id="players-block">
+      <h2 class="label">Players</h2>
+      <div class="player-row">
+        <span class="stone-chip black" aria-hidden="true"></span>
+        <span class="player-label">Black</span>
+        <select id="black-select" class="select"></select>
+      </div>
+      <div class="player-row">
+        <span class="stone-chip white" aria-hidden="true"></span>
+        <span class="player-label">White</span>
+        <select id="white-select" class="select"></select>
+      </div>
+      <div class="player-row">
+        <span class="player-label" style="grid-column: 1 / span 2">Board size</span>
+        <select id="size-select" class="select">
+          <option value="9">9 × 9</option>
+          <option value="13">13 × 13</option>
+          <option value="15" selected>15 × 15</option>
+          <option value="19">19 × 19</option>
+        </select>
+      </div>
+      <button id="new-game-btn" class="primary">New game →</button>
+    </section>
+
+    <section class="ctl-block" id="watch-block">
+      <h2 class="label">Watch</h2>
+      <div class="speed-row">
+        <span class="muted">speed</span>
+        <input id="speed" type="range" min="50" max="2000" step="50" value="500">
+        <span id="speed-readout" class="mono dim">500ms</span>
+      </div>
+      <div class="watch-buttons">
+        <button id="play-btn" class="ghost">▷ play</button>
+        <button id="pause-btn" class="ghost" disabled>❚❚ pause</button>
+        <button id="step-btn" class="ghost">→ step</button>
+      </div>
+    </section>
+
+    <section class="ctl-block" id="replay-block" hidden>
+      <h2 class="label">Replay</h2>
+      <p class="hint">Load JSON with <code>{size, moves: [a, a, …]}</code>. Moves are flat indices.</p>
+      <label class="file-button">
+        <input id="replay-file" type="file" accept=".json,application/json">
+        <span>↥ load .json</span>
+      </label>
+      <div id="replay-controls" class="watch-buttons" hidden>
+        <button id="rep-back" class="ghost">← back</button>
+        <button id="rep-fwd" class="ghost">step →</button>
+        <button id="rep-play" class="ghost">▷ play</button>
+      </div>
+    </section>
+  </aside>
+
+  <!-- CENTER: board -->
+  <section class="panel board-wrap">
+    <div class="board-frame">
+      <svg id="board" viewBox="0 0 640 640" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Gomoku board"></svg>
+    </div>
+    <div class="board-readout">
+      <div id="turn-readout" class="readout">
+        <span class="readout-label">to move</span>
+        <span id="to-move" class="readout-val">—</span>
+      </div>
+      <div class="readout">
+        <span class="readout-label">ply</span>
+        <span id="ply-count" class="readout-val mono">0</span>
+      </div>
+      <div class="readout">
+        <span class="readout-label">game</span>
+        <span id="game-id" class="readout-val mono dim">—</span>
+      </div>
+      <div id="result-readout" class="readout result" hidden>
+        <span class="readout-label">result</span>
+        <span id="result-val" class="readout-val">—</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIGHT: scoresheet -->
+  <aside class="panel scoresheet">
+    <header class="sheet-head">
+      <h2 class="label">Scoresheet</h2>
+      <button id="export-btn" class="ghost tiny">⇩ json</button>
+    </header>
+    <div class="sheet-table-wrap">
+      <table class="sheet">
+        <thead>
+          <tr>
+            <th class="num">#</th>
+            <th><span class="stone-chip black tiny"></span></th>
+            <th><span class="stone-chip white tiny"></span></th>
+          </tr>
+        </thead>
+        <tbody id="sheet-body">
+          <!-- ply rows injected here -->
+        </tbody>
+      </table>
+      <div id="sheet-empty" class="sheet-empty">
+        no moves yet.
+      </div>
+    </div>
+    <footer class="sheet-foot">
+      <div class="agent-summary" id="agent-summary"></div>
+    </footer>
+  </aside>
+
+</main>
+
+<footer class="footnote">
+  <span>fig. 01 — interactive board for tabular, linear, and deep agents.</span>
+  <span class="mono dim" id="footer-host">—</span>
+</footer>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
