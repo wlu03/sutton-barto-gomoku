@@ -8,8 +8,6 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/python-3.11+-blue.svg" alt="Python 3.11+"/>
-  <img src="https://img.shields.io/github/license/wlu03/sutton-barto-gomoku" alt="License"/>
-  <img src="https://img.shields.io/github/actions/workflow/status/wlu03/sutton-barto-gomoku/ci.yml?branch=main" alt="CI"/>
   <img src="https://img.shields.io/github/last-commit/wlu03/sutton-barto-gomoku" alt="Last commit"/>
   <img src="https://img.shields.io/badge/book-Sutton%20%26%20Barto-success" alt="Sutton & Barto"/>
 </p>
@@ -88,12 +86,12 @@ docs/
 
 Cross-play results updated as agents are added. All numbers from 1000-game round-robin self-play on the noted board size.
 
-| | Random | ε-greedy | Q-learning | Dyna-Q | TD(λ) | REINFORCE | AlphaZero |
-|---|---|---|---|---|---|---|---|
-| Random | — | | | | | | |
-| ε-greedy | | — | | | | | |
-| Q-learning | | | — | | | | |
-| *(filled in as agents are built)* | | | | | | | |
+| | Random | Q-learning | Dyna-Q | TD(λ) | REINFORCE | AlphaZero |
+|---|---|---|---|---|---|---|
+| Random | — | | | | | |
+| Q-learning | | — | | | | |
+| Dyna-Q | | | — | | | |
+| *(filled in as agents are built)* | | | | | | |
 
 ## Writeups
 
